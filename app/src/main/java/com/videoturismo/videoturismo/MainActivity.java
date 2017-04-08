@@ -9,16 +9,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    ListView lv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        lv=(ListView)findViewById(R.id.listview);
+        String[] sistemas = {"Ubuntu", "Android", "iOS", "Windows", "Mac OSX",
+                "Google Chrome OS", "Debian", "Mandriva", "Solaris", "Unix","Ubuntu", "Android", "iOS", "Windows", "Mac OSX",
+                "Google Chrome OS", "Debian", "Mandriva", "Solaris", "Unix"};
+
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String >(this, android.R.layout.simple_list_item_1, sistemas);
+        lv.setAdapter(adaptador);
 
 
 
