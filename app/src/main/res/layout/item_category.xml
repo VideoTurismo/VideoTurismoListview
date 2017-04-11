@@ -6,29 +6,33 @@
     android:background="@android:color/background_light">
 
     <ImageView
+        android:id="@+id/imagenPelicula"
         android:layout_width="150dp"
         android:layout_height="80dp"
-        android:id="@+id/imagenPelicula"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true" />
 
     <TextView
         android:id="@+id/tituloPelicula"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imagenPelicula"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/imagenPelicula"
+        android:layout_toRightOf="@+id/imagenPelicula"
         android:gravity="center_horizontal|center"
         android:text="Titulo"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_alignBottom="@+id/imagenPelicula"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="25dp"
-        android:layout_toRightOf="@+id/imagenPelicula"
-        android:layout_toEndOf="@+id/imagenPelicula" />
+        android:textStyle="bold" />
         android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

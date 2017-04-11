@@ -1,9 +1,10 @@
 package com.videoturismo.videoturismo;
 
-import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by CASCENCIO on 10/04/2017.
@@ -11,13 +12,14 @@ import com.squareup.picasso.Picasso;
 
 public class Category {
 
-    private String idImagen;
+    private Bitmap idImagen;
+    private URL urlImagen;
     private String tituloPelicula;
 
 
-    public Category (String idImagen, String tituloPelicula) {
-        this.idImagen = idImagen;
+    public Category (URL urlImagen, String tituloPelicula) {
         this.tituloPelicula = tituloPelicula;
+        this.urlImagen = urlImagen;
 
     }
 
@@ -27,9 +29,9 @@ public class Category {
 
 
 
-    public String get_imagenpeli(Context con, ImageView iv) {
-        Picasso.with(con).load(idImagen).into(iv);
+    public Bitmap get_imagenpeli(ImageView iv) throws MalformedURLException {
 
+        new CargarImagenes(urlImagen,iv).execute();
         return idImagen;
     }
 }
