@@ -1,5 +1,8 @@
 package com.videoturismo.videoturismo;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,13 +12,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     ListView lv;
+
+    private static String URLSERVIDORPELICULAS = "http://192.168.5.161/streaming/WebServices/obtenerPelicula.php?nombreGenero=Estrenos";
+
+    ArrayList<HashMap<String, String>> datos1;
+    JSONArray pelis;
+
+    String titulo;
+    String portada;
+    String rutaPelicula;
+    String sinopsis;
+
+    JSONParser jParser;
+    JSONObject jSONObject = null;
+    JSONArray jArray = null;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,16 +53,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        lv=(ListView)findViewById(R.id.listview);
-        String[] sistemas = {"Ubuntu", "Android", "iOS", "Windows", "Mac OSX",
-                "Google Chrome OS", "Debian", "Mandriva", "Solaris", "Unix","Ubuntu", "Android", "iOS", "Windows", "Mac OSX",
-                "Google Chrome OS", "Debian", "Mandriva", "Solaris", "Unix"};
-
-        ArrayAdapter<String> adaptador = new ArrayAdapter<String >(this, android.R.layout.simple_list_item_1, sistemas);
-        lv.setAdapter(adaptador);
+        lv = (ListView) findViewById(R.id.listview);
 
 
+        //Llenamos las celdas de la lista
+       new CargarListView(MainActivity.this).execute();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -91,5 +116,80 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private class CargarListView extends AsyncTask<Void, Void, ArrayList<Category>> {
+        Context context;
+        ProgressDialog pDialog;
+
+        public CargarListView(Context context){
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Cargando Lista");
+            pDialog.setCancelable(true);
+            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pDialog.show();
+        }
+
+        @Override
+        protected ArrayList<Category> doInBackground(Void... arg0) {
+            // TODO Auto-generated method stub
+            ArrayList<Category> adaptador = new ArrayList<>();
+            JSONParser jSonP = new JSONParser();
+            JSONArray jArray   = null;
+            try {
+                jArray = jSonP.readJsonArrayFromUrl(URLSERVIDORPELICULAS);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < jArray.length(); i++) {
+
+                JSONObject c = null;
+                try {
+                    c = jArray.getJSONObject(i);
+                    titulo = c.getString("titulo");
+                    portada = c.getString("rutaPortada");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                adaptador.add(new Category(portada, titulo));
+            }
+            try{
+                Thread.sleep(2000);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+            return adaptador;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Category> result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+
+            lv.setAdapter(new AdapterItem(MainActivity.this, R.layout.item_category, result) {
+                @Override
+                public void onEntrada(Object entrada, View view) {
+                    TextView tituloPeli = (TextView) view.findViewById(R.id.tituloPelicula);
+                    tituloPeli.setText(((Category) entrada).get_tituloPeli());
+
+                    ImageView imagenPeli = (ImageView) view.findViewById(R.id.imagenPelicula);
+
+                    imagenPeli.setImageResource(Integer.parseInt(((Category) entrada).get_imagenpeli(context,imagenPeli)));
+                }
+            });
+            pDialog.dismiss();
+        }
     }
 }
