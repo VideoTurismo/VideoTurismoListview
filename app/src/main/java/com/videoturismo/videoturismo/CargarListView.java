@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +28,8 @@ public class CargarListView extends AsyncTask<Void, Void, ArrayList<Category>> {
     ProgressDialog pDialog;
     ListView lv;
     ImageView imagenPeli;
+
+    AdapterView myAdapter ;
 
 
     String genero;

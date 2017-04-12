@@ -51,5 +51,10 @@ public abstract class AdapterItem extends BaseAdapter {
         return posicion;
     }
 
+    public String getPathPeli(){
+        String path = "puto el q lo lea";
+        return path;
+    }
+
     public abstract void onEntrada(Object entrada, View view) ;
 }
